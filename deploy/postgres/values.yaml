@@ -1,0 +1,8 @@
+auth:
+  existingSecret: postgres-secret
+
+primary:
+  persistence:
+    enabled: true
+    storageClass: postgres-hostpath-expandable
+    size: 15Gi

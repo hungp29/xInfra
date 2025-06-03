@@ -31,13 +31,13 @@ echo "⏳ Waiting for MicroK8s to be ready..."
 microk8s status --wait-ready
 
 echo "⚙️ Enabling addons: dns, ingress, cert-manager, hostpath-storage, helm3 ..."
-REQUIRED_ADDONS=("dns" "ingress" "cert-manager" "hostpath-storage", "helm3")
+REQUIRED_ADDONS=("dns" "ingress" "cert-manager" "hostpath-storage" "helm3")
 
 for addon in "${REQUIRED_ADDONS[@]}"; do
   if microk8s status --format short | grep -qE ".*/$addon: enabled"; then
     echo "[OK] Addon '$addon' is already enabled."
   else
-    echo "[...] Enabling addon '$addon'..."
+    echo "[..] Enabling addon '$addon'..."
     microk8s enable "$addon"
   fi
 done

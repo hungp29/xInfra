@@ -1,6 +1,10 @@
 #!/bin/bash -e
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 echo "🔄 Cleaning up whoami resources..."
+
+microk8s kubectl delete -f $SCRIPT_DIR/whoami/whoami.yaml
 
 # Namespace
 NAMESPACE=default

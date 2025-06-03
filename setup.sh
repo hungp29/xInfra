@@ -7,6 +7,7 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
+# Install necessary packages
 CURRENT_USER=${SUDO_USER:-$(whoami)}
 
 if ! command -v snap &> /dev/null; then
@@ -41,5 +42,21 @@ for addon in "${REQUIRED_ADDONS[@]}"; do
     microk8s enable "$addon"
   fi
 done
+
+# Create cluster issuer if it does not exist
+create_cluster_issuer() {
+  NAME=$1
+  YAML_FILE=$2
+
+  if microk8s kubectl get clusterissuer "$NAME" >/dev/null 2>&1; then
+    echo "[OK] ClusterIssuer '$NAME' already exists."
+  else
+    echo "[+] Creating ClusterIssuer '$NAME' from $YAML_FILE..."
+    microk8s kubectl apply -f "$YAML_FILE"
+  fi
+}
+
+echo "🔧 Configuring cert-manager ClusterIssuer..."
+create_cluster_issuer "letsencrypt-prod" "./cert-manager/cluster-issuer-prod.yaml"
 
 echo "✅ MicroK8s setup complete!"

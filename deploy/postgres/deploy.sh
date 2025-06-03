@@ -3,7 +3,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Default configuration
-RELEASE_NAME="xPostgres"
+RELEASE_NAME="x-postgres"
 NAMESPACE="infra"
 POSTGRES_USER=${POSTGRES_USER:-xroot}
 POSTGRES_DB=${POSTGRES_DB:-xroot}

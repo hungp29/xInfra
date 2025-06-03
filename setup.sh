@@ -35,7 +35,7 @@ usermod -a -G microk8s $CURRENT_USER
 chown -f -R $CURRENT_USER ~/.kube
 
 echo "⏳ Waiting for MicroK8s to be ready..."
-microk8s status --wait-ready
+microk8s status --wait-ready > /dev/null
 
 echo "⚙️ Enabling addons: dns, ingress, cert-manager, hostpath-storage, helm3 ..."
 REQUIRED_ADDONS=("dns" "ingress" "cert-manager" "hostpath-storage" "helm3")

@@ -7,9 +7,10 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
-# Install necessary packages
 CURRENT_USER=${SUDO_USER:-$(whoami)}
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# Install necessary packages
 if ! command -v snap &> /dev/null; then
   echo "📦 'snap' not found. Installing snapd..."
   apt update -y
@@ -62,22 +63,15 @@ create_cluster_issuer() {
 }
 
 echo "🔧 Configuring cert-manager ClusterIssuer..."
-create_cluster_issuer "letsencrypt-prod" "./cert-manager/cluster-issuer-prod.yaml"
+create_cluster_issuer "letsencrypt-prod" "$SCRIPT_DIR/cert-manager/cluster-issuer-prod.yaml"
 
 # Deploy whoami service to test the setup
 echo "🚀 Deploying whoami service to test the setup..."
-microk8s kubectl apply -f ./whoami/whoami.yaml
+microk8s kubectl apply -f $SCRIPT_DIR/whoami/whoami.yaml
 microk8s kubectl rollout status deployment/whoami
 
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# echo $SCRIPT_DIR
-# ls -l "$SCRIPT_DIR/whoami/whoami.yaml"
-# ls -l /tmp
-# host=$(yq '.spec.tls[0].hosts[0]' /tmp/whoami.yaml)
-# host=$(yq '.spec.tls[0].hosts[0]' "$SCRIPT_DIR/whoami/whoami.yaml")
 
-# host=$(yq '.spec.tls[0].hosts[0]' /tmp/whoami.yaml)
 cp "$SCRIPT_DIR/whoami/whoami.yaml" ~/whoami.yaml
 host=$(yq 'select(.kind == "Ingress") | .spec.tls[0].hosts[0]' ~/whoami.yaml)
 rm ~/whoami.yaml

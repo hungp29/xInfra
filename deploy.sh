@@ -63,7 +63,6 @@ if [[ -n "$ONLY" ]]; then
   fi
 else
   BASE_DIR="$([[ $MODE == "deploy" ]] && echo "$DEPLOY_DIR" || echo "$UNDEPLOY_DIR")"
-  echo $BASE_DIR
   echo "🔁 Running $MODE for all modules in $(basename "$BASE_DIR")"
   for dir in "$BASE_DIR"/*; do
     mod_name=$(basename "$dir")

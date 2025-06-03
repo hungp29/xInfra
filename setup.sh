@@ -71,11 +71,11 @@ microk8s kubectl rollout status deployment/whoami
 
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cp "$SCRIPT_DIR/whoami/whoami.yaml" /tmp/whoami.yaml
 echo $SCRIPT_DIR
 ls -l "$SCRIPT_DIR/whoami/whoami.yaml"
 ls -l /tmp
-host=$(yq '.spec.tls[0].hosts[0]' /tmp/whoami.yaml)
+# host=$(yq '.spec.tls[0].hosts[0]' /tmp/whoami.yaml)
+host=$(yq '.spec.tls[0].hosts[0]' "$SCRIPT_DIR/whoami/whoami.yaml")
 
 # host=$(yq '.spec.tls[0].hosts[0]' /tmp/whoami.yaml)
 echo "🔗 You can now access the whoami service at https://$host"

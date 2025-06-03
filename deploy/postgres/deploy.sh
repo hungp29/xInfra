@@ -16,6 +16,10 @@ if ! command -v microk8s helm &> /dev/null; then
   exit 1
 fi
 
+echo "🔍 Checking if namespace '$NAMESPACE' exists..."
+microk8s kubectl get namespace "$NAMESPACE" >/dev/null 2>&1 || \
+microk8s kubectl create namespace "$NAMESPACE"
+
 echo "🔐 Creating Kubernetes Secret with generated password..."
 microk8s kubectl create secret generic $SECRET_NAME \
   --from-literal=postgres-password="$POSTGRES_PASSWORD" \

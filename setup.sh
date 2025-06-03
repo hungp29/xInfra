@@ -79,12 +79,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # host=$(yq '.spec.tls[0].hosts[0]' /tmp/whoami.yaml)
 cp "$SCRIPT_DIR/whoami/whoami.yaml" ~/whoami.yaml
-host=$(yq '.spec.tls[0].hosts[0]' ~/whoami.yaml)
+host=$(yq 'select(.kind == "Ingress") | .spec.tls[0].hosts[0]' ~/whoami.yaml)
 rm ~/whoami.yaml
-if [ -z "$host" ]; then
-  echo "❌ Failed to extract host from whoami.yaml"
-  exit 1
-fi
 echo "🔗 You can now access the whoami service at https://$host"
 
 echo "✅ MicroK8s setup complete!"

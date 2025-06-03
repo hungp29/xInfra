@@ -16,6 +16,11 @@ if ! command -v snap &> /dev/null; then
   apt install -y snapd
 fi
 
+if ! snap list | grep -q yq; then
+  echo "📦 Installing yq..."
+  snap install yq
+fi
+
 echo "🔍 Checking if MicroK8s is installed..."
 if ! snap list | grep -q microk8s; then
   echo "📦 Installing MicroK8s..."
@@ -58,5 +63,13 @@ create_cluster_issuer() {
 
 echo "🔧 Configuring cert-manager ClusterIssuer..."
 create_cluster_issuer "letsencrypt-prod" "./cert-manager/cluster-issuer-prod.yaml"
+
+# Deploy whoami service to test the setup
+echo "🚀 Deploying whoami service to test the setup..."
+microk8s kubectl apply -f ./whoami/whoami.yaml
+microk8s kubectl rollout status deployment/whoami
+
+host=$(yq '.spec.tls[0].hosts[0]' ./whoami/whoami.yaml)
+echo "🔗 You can now access the whoami service at https://$host"
 
 echo "✅ MicroK8s setup complete!"

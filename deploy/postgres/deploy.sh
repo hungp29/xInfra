@@ -1,6 +1,7 @@
 #!/bin/bash -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+echo "$SCRIPT_DIR"
 
 # Default configuration
 RELEASE_NAME="xPostgres"

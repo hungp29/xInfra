@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-NAMESPACE="default"                 
+NAMESPACE="infra"                 
 RELEASE_NAME="x-postgres"         
-SECRET_NAME="pg-secret"      
+SECRET_NAME="postgres-secret"      
 
 echo "🧹 Cleaning up PostgreSQL deployment in namespace: $NAMESPACE"
 

@@ -8,8 +8,7 @@ NAMESPACE="infra"
 POSTGRES_USER=${POSTGRES_USER:-xroot}
 POSTGRES_DB=${POSTGRES_DB:-xroot}
 POSTGRES_PASSWORD=$(openssl rand -base64 16)
-SECRET_NAME=pg-secret
-NAMESPACE=default
+SECRET_NAME=postgres-secret
 
 # Check helm is installed
 if ! command -v microk8s helm &> /dev/null; then

@@ -12,7 +12,7 @@ SECRET_NAME=pg-secret
 NAMESPACE=default
 
 # Check helm is installed
-if ! command -v helm &> /dev/null; then
+if ! command -v microk8s helm &> /dev/null; then
   echo "❌ Helm is not installed. Please install Helm by running setup.sh first."
   exit 1
 fi
@@ -27,17 +27,17 @@ echo "📦 Creating expandable StorageClass (if not exists)..."
 microk8s kubectl apply -f storageclass.yaml || true
 
 # Add Bitnami Helm repository if it does not exist
-if ! helm repo list | grep -q "bitnami"; then
+if ! microk8s helm repo list | grep -q "bitnami"; then
   echo "📦 Adding Bitnami Helm repository..."
   helm repo add bitnami https://charts.bitnami.com/bitnami
 fi
 
 echo "🔄 Update Helm repo..."
-helm repo update
+microk8s helm repo update
 
 # Deploy PostgreSQL
 echo "🚀 Deploy PostgreSQL..."
-helm upgrade --install $RELEASE_NAME bitnami/postgresql \
+microk8s helm upgrade --install $RELEASE_NAME bitnami/postgresql \
   --namespace $NAMESPACE \
   --set auth.username=$POSTGRES_USER \
   --set auth.database=$POSTGRES_DB

@@ -29,7 +29,7 @@ microk8s kubectl apply -f "$SCRIPT_DIR/storageclass.yaml" || true
 # Add Bitnami Helm repository if it does not exist
 if ! microk8s helm repo list | grep -q "bitnami"; then
   echo "📦 Adding Bitnami Helm repository..."
-  helm repo add bitnami https://charts.bitnami.com/bitnami
+  microk8s helm repo add bitnami https://charts.bitnami.com/bitnami
 fi
 
 echo "🔄 Update Helm repo..."
@@ -42,11 +42,6 @@ microk8s helm upgrade --install "$RELEASE_NAME" bitnami/postgresql \
   --set auth.username="$POSTGRES_USER" \
   --set auth.database="$POSTGRES_DB" \
   -f "$SCRIPT_DIR/values.yaml"
-# helm upgrade --install $RELEASE_NAME bitnami/postgresql \
-#   --namespace $NAMESPACE \
-#   --set auth.username=$POSTGRES_USER \
-#   --set auth.password=$DB_PASSWORD \
-#   --set auth.database=$POSTGRES_DB
 
 echo "✅ Done!"
 echo "🔗 PostgreSQL user: $POSTGRES_USER"

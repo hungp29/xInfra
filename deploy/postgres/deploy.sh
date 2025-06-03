@@ -7,6 +7,7 @@ RELEASE_NAME="x-postgres"
 NAMESPACE="infra"
 POSTGRES_USER=${POSTGRES_USER:-xroot}
 POSTGRES_DB=${POSTGRES_DB:-xroot}
+POSTGRES_USER_PASSWORD=$(openssl rand -base64 16)
 POSTGRES_PASSWORD=$(openssl rand -base64 16)
 SECRET_NAME=postgres-secret
 
@@ -22,6 +23,7 @@ microk8s kubectl create namespace "$NAMESPACE"
 
 echo "🔐 Creating Kubernetes Secret with generated password..."
 microk8s kubectl create secret generic $SECRET_NAME \
+  --from-literal=password="$POSTGRES_USER_PASSWORD" \
   --from-literal=postgres-password="$POSTGRES_PASSWORD" \
   --namespace $NAMESPACE \
   --dry-run=client -o yaml | microk8s kubectl apply -f -
@@ -48,6 +50,7 @@ microk8s helm upgrade --install "$RELEASE_NAME" bitnami/postgresql \
 
 echo "✅ Done!"
 echo "🔗 PostgreSQL user: $POSTGRES_USER"
+echo "🔗 PostgreSQL user password: $POSTGRES_USER_PASSWORD"
 echo "🔗 PostgreSQL db: $POSTGRES_DB"
 echo "🔑 PostgreSQL password: $POSTGRES_PASSWORD"
 echo "📌 To port-forward and access from host, run:"

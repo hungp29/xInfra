@@ -24,7 +24,7 @@ microk8s kubectl create secret generic $SECRET_NAME \
   --dry-run=client -o yaml | microk8s kubectl apply -f -
 
 echo "📦 Creating expandable StorageClass (if not exists)..."
-microk8s kubectl apply -f $SCRIPT_DIR/storageclass.yaml || true
+microk8s kubectl apply -f "$SCRIPT_DIR/storageclass.yaml" || true
 
 # Add Bitnami Helm repository if it does not exist
 if ! microk8s helm repo list | grep -q "bitnami"; then
@@ -37,11 +37,11 @@ microk8s helm repo update
 
 # Deploy PostgreSQL
 echo "🚀 Deploy PostgreSQL..."
-microk8s helm upgrade --install $RELEASE_NAME bitnami/postgresql \
-  --namespace $NAMESPACE \
-  --set auth.username=$POSTGRES_USER \
-  --set auth.database=$POSTGRES_DB
-  -f $SCRIPT_DIR/values.yaml
+microk8s helm upgrade --install "$RELEASE_NAME" bitnami/postgresql \
+  --namespace "$NAMESPACE" \
+  --set auth.username="$POSTGRES_USER" \
+  --set auth.database="$POSTGRES_DB" \
+  -f "$SCRIPT_DIR/values.yaml"
 # helm upgrade --install $RELEASE_NAME bitnami/postgresql \
 #   --namespace $NAMESPACE \
 #   --set auth.username=$POSTGRES_USER \

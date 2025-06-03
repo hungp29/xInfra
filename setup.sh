@@ -66,10 +66,11 @@ create_cluster_issuer "letsencrypt-prod" "./cert-manager/cluster-issuer-prod.yam
 
 # Deploy whoami service to test the setup
 echo "🚀 Deploying whoami service to test the setup..."
-microk8s kubectl apply -f ./whoami/whoami.yaml
+cp ./whoami/whoami.yaml /tmp/whoami.yaml
+microk8s kubectl apply -f /tmp/whoami.yaml
 microk8s kubectl rollout status deployment/whoami
 
-host=$(yq '.spec.tls[0].hosts[0]' ./whoami/whoami.yaml)
+host=$(yq '.spec.tls[0].hosts[0]' /tmp/whoami.yaml)
 echo "🔗 You can now access the whoami service at https://$host"
 
 echo "✅ MicroK8s setup complete!"

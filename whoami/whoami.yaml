@@ -50,6 +50,7 @@ metadata:
   name: http-ingress-whoami
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
     # kubernetes.io/ingress.class: "public" # This is deprecated
 spec:
   ingressClassName: public

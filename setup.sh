@@ -9,7 +9,6 @@ fi
 
 CURRENT_USER=${SUDO_USER:-$(whoami)}
 
-echo "🔍 Checking if 'snap' is installed..."
 if ! command -v snap &> /dev/null; then
   echo "📦 'snap' not found. Installing snapd..."
   apt update -y
@@ -35,7 +34,7 @@ echo "⚙️ Enabling addons: dns, ingress, cert-manager, hostpath-storage, helm
 REQUIRED_ADDONS=("dns" "ingress" "cert-manager" "hostpath-storage", "helm3")
 
 for addon in "${REQUIRED_ADDONS[@]}"; do
-  if microk8s status --format short | grep -q "^enabled: $addon"; then
+  if microk8s status --format short | grep -qE ".*/$addon: enabled"; then
     echo "[OK] Addon '$addon' is already enabled."
   else
     echo "[...] Enabling addon '$addon'..."

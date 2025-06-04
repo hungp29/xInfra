@@ -66,6 +66,9 @@ echo "🔧 Configuring cert-manager ClusterIssuer..."
 create_cluster_issuer "letsencrypt-prod" "$SCRIPT_DIR/cert-manager/cluster-issuer-prod.yaml"
 
 # Deploy whoami service to test the setup
-"$SCRIPT_DIR/test.sh"
+"$SCRIPT_DIR/scripts/test.sh"
 
 echo "✅ MicroK8s setup complete!"
+
+# Mapping the scripts
+"$SCRIPT_DIR/scripts/map_script.sh"

@@ -28,6 +28,7 @@ microk8s kubectl rollout status deployment/whoami
 
 # Extract host from Ingress
 cp "$WHOAMI_YAML" "/usr/local/bin/whoami.yaml"
+ls -l "/usr/local/bin/whoami.yaml"
 host=$(yq 'select(.kind == "Ingress") | .spec.tls[0].hosts[0]' "/usr/local/bin/whoami.yaml")
 rm "/usr/local/bin/whoami.yaml"
 

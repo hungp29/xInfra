@@ -52,7 +52,7 @@ microk8s helm repo update
 echo "🚀 Deploy PostgreSQL..."
 microk8s helm upgrade --install "$POSTGRES_RELEASE_NAME" $POSTGERS_CHART_NAME \
   --namespace "$INFRA_NAMESPACE" \
-  --set auth.username="$POSTGRES_DB_NAME_USER" \
+  --set auth.username="$POSTGRES_DB_USER" \
   --set auth.database="$POSTGRES_DB_NAME" \
   --set auth.existingSecret="$POSTGRES_SECRET_NAME" \
   --set containerPorts.postgresql=$POSTGRES_PORT \

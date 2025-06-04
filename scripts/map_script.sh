@@ -28,7 +28,7 @@ for name in "${!SCRIPTS[@]}"; do
   cat <<EOF | sudo tee "$BIN_DIR/$name" > /dev/null
 #!/bin/bash
 export PROJECT_ROOT="$PROJECT_ROOT"
-source "\$PROJECT_ROOT/config/env.sh"
+source "$PROJECT_ROOT/config/env.sh"
 echo "$INFRA_NAMESPACE"
 bash "$target" "\$@"
 EOF

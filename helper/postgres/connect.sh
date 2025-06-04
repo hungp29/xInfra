@@ -52,12 +52,21 @@ FORWARD_PID=$!
 
 # Ensure cleanup when script exits
 cleanup() {
-  # Kill wrapper PID
-  kill "$FORWARD_PID" > /dev/null 2>&1 || true
+  echo "🧹 Cleaning up port-forward (PID: $FORWARD_PID)..."
 
-  # Kill child process (kubectl)
-  CHILD_PID=$(pgrep -P "$FORWARD_PID")
-  kill "$CHILD_PID" > /dev/null 2>&1 || true
+  kill_tree() {
+    local _pid=$1
+    local _children
+    _children=$(pgrep -P "$_pid")
+
+    for _child in $_children; do
+      kill_tree "$_child"
+    done
+
+    kill "$_pid" > /dev/null 2>&1 || true
+  }
+
+  kill_tree "$FORWARD_PID"
 }
 # trap cleanup EXIT
 
@@ -72,9 +81,7 @@ if [[ -n "$QUERY" ]]; then
   PGPASSWORD="$PGPASSWORD" psql -h localhost -p "$PORT" -U "$DB_USER" -d "$DB_NAME" -c "$QUERY"
   EXIT_CODE=$?
 
-  # echo "FORWARD_PID $FORWARD_PID"
-  # kill "$FORWARD_PID" > /dev/null 2>&1 || true
-  # cleanup
+  cleanup
   exit $EXIT_CODE
 else
   echo "💬 Connecting to interactive psql shell..."
@@ -82,8 +89,6 @@ else
 
   EXIT_CODE=$?
 
-  # echo "FORWARD_PID $FORWARD_PID"
-  # kill "$FORWARD_PID" > /dev/null 2>&1 || true
-  # cleanup
+  cleanup
   exit $EXIT_CODE
 fi

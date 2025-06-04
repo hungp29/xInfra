@@ -10,6 +10,10 @@ fi
 CURRENT_USER=${SUDO_USER:-$(whoami)}
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# Mapping the scripts
+echo "📦 Mapping scripts from: $SCRIPT_DIR/scripts"
+"$SCRIPT_DIR/scripts/map_script.sh"
+
 # Install necessary packages
 if ! command -v snap &> /dev/null; then
   echo "📦 'snap' not found. Installing snapd..."
@@ -69,6 +73,3 @@ create_cluster_issuer "letsencrypt-prod" "$SCRIPT_DIR/cert-manager/cluster-issue
 "$SCRIPT_DIR/scripts/test.sh"
 
 echo "✅ MicroK8s setup complete!"
-
-# Mapping the scripts
-"$SCRIPT_DIR/scripts/map_script.sh"

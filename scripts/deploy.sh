@@ -1,8 +1,7 @@
 #!/bin/bash -e
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DEPLOY_DIR="$SCRIPT_DIR/deploy"
-UNDEPLOY_DIR="$SCRIPT_DIR/undeploy"
+DEPLOY_DIR="$PROJECT_ROOT/deploy"
+UNDEPLOY_DIR="$PROJECT_ROOT/undeploy"
 
 ONLY=""
 MODE="deploy"  # or "clean"

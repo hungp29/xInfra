@@ -33,7 +33,8 @@ microk8s kubectl delete pvc -l app.kubernetes.io/instance="$POSTGRES_RELEASE_NAM
 
 
 if [[ ! -z "$PV_NAME" ]]; then
-  echo "Consider deleting the pv manually: '$PV_NAME'"
+  echo "Consider deleting the pv manually: '$PV_NAME' by running:"
+  echo "microk8s kubectl delete pv $PV_NAME"
   # microk8s kubectl describe pv "$PV_NAME"
 fi
 

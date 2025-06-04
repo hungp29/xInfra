@@ -7,7 +7,7 @@ if [[ -z "$PROJECT_ROOT" ]]; then
 fi
 
 SCRIPT_DIR="$PROJECT_ROOT/deploy"
-CONFIG_FILE="$PROJECT_ROOT/config/evn.sh"
+CONFIG_FILE="$PROJECT_ROOT/config/env.sh"
 
 if [[ ! -f "$CONFIG_FILE" ]]; then
   echo "❌ Missing config file: $CONFIG_FILE"

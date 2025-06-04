@@ -17,12 +17,10 @@ if [[ ! -f "$CONFIG_FILE" ]]; then
 fi
 source "$CONFIG_FILE"
 
-# NAMESPACE="infra"
-# SERVICE_NAME="x-postgres-postgresql"
-# PORT=5432
-# DB_USER="myuser"
-# DB_NAME="mydb"
-# QUERY=""
+PORT=${POSTGRES_PORT:-5432}
+DB_USER="${POSTGRES_DB_USER:-postgres}"
+DB_NAME="${POSTGRES_DB_NAME:-postgres}"
+QUERY=""
 
 # Parse optional arguments
 while [[ $# -gt 0 ]]; do
@@ -49,7 +47,7 @@ if ! command -v psql &>/dev/null; then
 fi
 
 echo "🔗 Port-forwarding PostgreSQL service..."
-microk8s kubectl port-forward -n "$NAMESPACE" svc/$SERVICE_NAME "$PORT:$PORT" > /dev/null 2>&1 &
+microk8s kubectl port-forward -n "$INFRA_NAMESPACE" svc/$POSTGRES_SERVICE_NAME "$PORT:$PORT" > /dev/null 2>&1 &
 FORWARD_PID=$!
 
 # Ensure cleanup when script exits
@@ -61,7 +59,7 @@ trap cleanup EXIT
 sleep 2
 
 # Get password from secret
-PGPASSWORD=$(microk8s kubectl get secret -n "$NAMESPACE" "$SERVICE_NAME" -o jsonpath="{.data.postgres-password}" | base64 -d)
+PGPASSWORD=$(microk8s kubectl get secret -n "$INFRA_NAMESPACE" "$POSTGRES_SERVICE_NAME" -o jsonpath="{.data.password}" | base64 -d)
 
 # Connect or run query
 if [[ -n "$QUERY" ]]; then

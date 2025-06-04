@@ -1,6 +1,3 @@
-auth:
-  existingSecret: postgres-secret
-
 primary:
   persistence:
     enabled: true

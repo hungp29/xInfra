@@ -1,0 +1,12 @@
+#!/bin/bash
+
+INFRA_NAMESPACE="infra"
+
+# PostgreSQL configuration
+POSTGRES_RELEASE_NAME="x-db"
+POSTGRES_SERVICE_NAME="${RELEASE_NAME}-postgresql"
+POSTGRES_DB_USER="xroot"
+POSTGRES_DB_NAME="xroot"
+POSTGRES_PORT=5432
+POSTGRES_SECRET_NAME="${RELEASE_NAME}-secret"
+POSTGERS_CHART_NAME="bitnami/postgresql"

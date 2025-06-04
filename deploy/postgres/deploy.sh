@@ -1,15 +1,11 @@
 #!/bin/bash -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/config.sh"
 
 # Default configuration
-RELEASE_NAME="x-postgres"
-NAMESPACE="infra"
-POSTGRES_USER=${POSTGRES_USER:-xroot}
-POSTGRES_DB=${POSTGRES_DB:-xroot}
-POSTGRES_USER_PASSWORD=$(openssl rand -base64 16)
-POSTGRES_PASSWORD=$(openssl rand -base64 16)
-SECRET_NAME=postgres-secret
+POSTGRES_DB_USER_PASSWORD=$(openssl rand -base64 16)
+POSTGRES_ADMIN_PASSWORD=$(openssl rand -base64 16)
 
 # Check helm is installed
 if ! command -v microk8s helm &> /dev/null; then
@@ -17,15 +13,15 @@ if ! command -v microk8s helm &> /dev/null; then
   exit 1
 fi
 
-echo "🔍 Checking if namespace '$NAMESPACE' exists..."
-microk8s kubectl get namespace "$NAMESPACE" >/dev/null 2>&1 || \
-microk8s kubectl create namespace "$NAMESPACE"
+echo "🔍 Checking if namespace '$INFRA_NAMESPACE' exists..."
+microk8s kubectl get namespace "$INFRA_NAMESPACE" >/dev/null 2>&1 || \
+microk8s kubectl create namespace "$INFRA_NAMESPACE"
 
 echo "🔐 Creating Kubernetes Secret with generated password..."
-microk8s kubectl create secret generic $SECRET_NAME \
-  --from-literal=password="$POSTGRES_USER_PASSWORD" \
-  --from-literal=postgres-password="$POSTGRES_PASSWORD" \
-  --namespace $NAMESPACE \
+microk8s kubectl create secret generic $POSTGRES_SECRET_NAME \
+  --from-literal=password="$POSTGRES_DB_USER_PASSWORD" \
+  --from-literal=postgres-password="$POSTGRES_ADMIN_PASSWORD" \
+  --namespace $INFRA_NAMESPACE \
   --dry-run=client -o yaml | microk8s kubectl apply -f -
 
 echo "📦 Creating expandable StorageClass (if not exists)..."
@@ -42,16 +38,18 @@ microk8s helm repo update
 
 # Deploy PostgreSQL
 echo "🚀 Deploy PostgreSQL..."
-microk8s helm upgrade --install "$RELEASE_NAME" bitnami/postgresql \
-  --namespace "$NAMESPACE" \
-  --set auth.username="$POSTGRES_USER" \
-  --set auth.database="$POSTGRES_DB" \
+microk8s helm upgrade --install "$POSTGRES_RELEASE_NAME" $POSTGERS_CHART_NAME \
+  --namespace "$INFRA_NAMESPACE" \
+  --set auth.username="$POSTGRES_DB_NAME_USER" \
+  --set auth.database="$POSTGRES_DB_NAME" \
+  --set auth.existingSecret="$POSTGRES_SECRET_NAME" \
+  --set containerPorts.postgresql=$POSTGRES_PORT \
   -f "$SCRIPT_DIR/values.yaml"
 
 echo "✅ Done!"
-echo "🔗 PostgreSQL user: $POSTGRES_USER"
-echo "🔗 PostgreSQL user password: $POSTGRES_USER_PASSWORD"
-echo "🔗 PostgreSQL db: $POSTGRES_DB"
-echo "🔑 PostgreSQL password: $POSTGRES_PASSWORD"
+echo "🔗 PostgreSQL user: $POSTGRES_DB_NAME_USER"
+echo "🔑 PostgreSQL user password: $POSTGRES_DB_USER_PASSWORD"
+echo "🔑 PostgreSQL admin password: $POSTGRES_ADMIN_PASSWORD"
+echo "🔗 PostgreSQL db: $POSTGRES_DB_NAME"
 echo "📌 To port-forward and access from host, run:"
-echo "   microk8s kubectl port-forward --namespace $NAMESPACE svc/$RELEASE_NAME-postgresql 5432:5432"
+echo "   microk8s kubectl port-forward --namespace $INFRA_NAMESPACE svc/$POSTGRES_SERVICE_NAME $POSTGRES_PORT:5432"

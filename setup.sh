@@ -11,7 +11,6 @@ CURRENT_USER=${SUDO_USER:-$(whoami)}
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Mapping the scripts
-echo "📦 Mapping scripts from: $SCRIPT_DIR/scripts"
 "$SCRIPT_DIR/scripts/map_script.sh"
 
 # Install necessary packages

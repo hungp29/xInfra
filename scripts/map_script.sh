@@ -9,7 +9,6 @@ BIN_DIR="/usr/local/bin"
 # List of scripts to symlink
 declare -A SCRIPTS=(
   ["deploy"]="$PROJECT_ROOT/scripts/deploy.sh"
-  ["undeploy"]="$PROJECT_ROOT/scripts/undeploy.sh"
   ["helper"]="$PROJECT_ROOT/scripts/helper.sh"
 )
 echo "📦 Mapping CLI scripts to $BIN_DIR..."

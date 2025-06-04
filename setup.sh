@@ -20,9 +20,10 @@ if ! command -v snap &> /dev/null; then
   apt install -y snapd
 fi
 
-if ! snap list | grep -q yq; then
+if ! command -v yq &> /dev/null; then
   echo "📦 Installing yq..."
-  snap install yq
+  sudo wget -q https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
+  sudo chmod +x /usr/local/bin/yq
 fi
 
 echo "🔍 Checking if MicroK8s is installed..."

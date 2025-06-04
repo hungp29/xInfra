@@ -12,7 +12,10 @@ if [[ "$1" == "--clean" ]]; then
   microk8s kubectl delete -f "$WHOAMI_YAML" --ignore-not-found
   
   echo "🧹 Deleting TLS secret..."
+  cp "$WHOAMI_YAML" "~/whoami.yaml"
   tls_name=$(yq 'select(.kind == "Ingress") | .spec.tls[0].secretName' "$WHOAMI_YAML")
+  rm "~/whoami.yaml"
+  
   microk8s kubectl delete secret $tls_name --namespace $NAMESPACE --ignore-not-found
   
   exit 0
@@ -24,11 +27,11 @@ microk8s kubectl apply -f "$WHOAMI_YAML"
 microk8s kubectl rollout status deployment/whoami
 
 # Extract host from Ingress
-host=$(yq 'select(.kind == "Ingress") | .spec.tls[0].hosts[0]' "$WHOAMI_YAML")
-
-rm ~/whoami.yaml
+cp "$WHOAMI_YAML" "~/whoami.yaml"
+host=$(yq 'select(.kind == "Ingress") | .spec.tls[0].hosts[0]' "~/whoami.yaml")
+rm "~/whoami.yaml"
 
 echo "🔗 You can now access the whoami service at https://$host"
-echo "To undeploy the whoami service, run:
+echo "To undeploy the whoami service, run:"
 echo "microk8s kubectl delete -f $PROJECT_ROOT/whoami/whoami.yaml"
 echo "service_test --clean"

@@ -59,7 +59,7 @@ trap cleanup EXIT
 sleep 2
 
 # Get password from secret
-PGPASSWORD=$(microk8s kubectl get secret -n "$INFRA_NAMESPACE" "$POSTGRES_SERVICE_NAME" -o jsonpath="{.data.password}" | base64 -d)
+PGPASSWORD=$(microk8s kubectl get secret -n "$INFRA_NAMESPACE" "$POSTGRES_SECRET_NAME" -o jsonpath="{.data.password}" | base64 -d)
 
 # Connect or run query
 if [[ -n "$QUERY" ]]; then

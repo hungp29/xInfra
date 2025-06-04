@@ -28,9 +28,15 @@ microk8s kubectl rollout status deployment/whoami
 
 # Extract host from Ingress
 cp "$WHOAMI_YAML" "/tmp/whoami.yaml"
-ls -l "/tmp/whoami.yaml"
-host=$(yq 'select(.kind == "Ingress") | .spec.tls[0].hosts[0]' "/tmp/whoami.yaml")
-# rm "/tmp/whoami.yaml"
+# ls -l "/tmp/whoami.yaml"
+# host=$(yq 'select(.kind == "Ingress") | .spec.tls[0].hosts[0]' "/tmp/whoami.yaml")
+# # rm "/tmp/whoami.yaml"
+TEMP_FILE=$(mktemp)
+cp "$WHOAMI_YAML" "$TEMP_FILE"
+
+host=$(yq eval 'select(.kind == "Ingress") | .spec.tls[0].hosts[0]' "$TEMP_FILE")
+
+rm -f "$TEMP_FILE"
 
 echo "🔗 You can now access the whoami service at https://$host"
 echo "To undeploy the whoami service, run:"

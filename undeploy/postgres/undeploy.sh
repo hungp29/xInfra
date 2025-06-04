@@ -1,7 +1,8 @@
 #!/bin/bash -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/config.sh"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+source "$PROJECT_ROOT/config.sh"
 
 echo "🧹 Cleaning up PostgreSQL deployment in namespace: $INFRA_NAMESPACE"
 

@@ -1,7 +1,8 @@
 #!/bin/bash -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/config.sh"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+source "$PROJECT_ROOT/config.sh"
 
 # Default configuration
 POSTGRES_DB_USER_PASSWORD=$(openssl rand -base64 16)

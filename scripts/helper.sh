@@ -1,7 +1,6 @@
 #!/bin/bash -e
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-HELPER_DIR="$SCRIPT_DIR/helper"
+HELPER_DIR="$PROJECT_ROOT/helper"
 
 function usage() {
   echo "Usage: $0 <component> <command> [args...]"

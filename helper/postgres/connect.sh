@@ -1,13 +1,28 @@
-#!/bin/bash
+#!/bin/bash -e
 
 set -euo pipefail
 
-NAMESPACE="infra"
-SERVICE_NAME="x-postgres-postgresql"
-PORT=5432
-DB_USER="myuser"
-DB_NAME="mydb"
-QUERY=""
+if [[ -z "$PROJECT_ROOT" ]]; then
+  echo "❌ PROJECT_ROOT is not set. Please run:"
+  echo "   export PROJECT_ROOT=/path/to/your/project"
+  exit 1
+fi
+
+SCRIPT_DIR="$PROJECT_ROOT/deploy/postgres"
+CONFIG_FILE="$PROJECT_ROOT/config/env.sh"
+
+if [[ ! -f "$CONFIG_FILE" ]]; then
+  echo "❌ Missing config file: $CONFIG_FILE"
+  exit 1
+fi
+source "$CONFIG_FILE"
+
+# NAMESPACE="infra"
+# SERVICE_NAME="x-postgres-postgresql"
+# PORT=5432
+# DB_USER="myuser"
+# DB_NAME="mydb"
+# QUERY=""
 
 # Parse optional arguments
 while [[ $# -gt 0 ]]; do

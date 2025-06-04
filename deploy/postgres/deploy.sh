@@ -6,6 +6,8 @@ if [[ -z "$PROJECT_ROOT" ]]; then
   exit 1
 fi
 
+SCRIPT_DIR="$PROJECT_ROOT/deploy"
+
 # Default configuration
 POSTGRES_DB_USER_PASSWORD=$(openssl rand -base64 16)
 POSTGRES_ADMIN_PASSWORD=$(openssl rand -base64 16)

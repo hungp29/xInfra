@@ -67,6 +67,7 @@ if [[ -n "$QUERY" ]]; then
   PGPASSWORD="$PGPASSWORD" psql -h localhost -p "$PORT" -U "$DB_USER" -d "$DB_NAME" -c "$QUERY"
   EXIT_CODE=$?
 
+  echo "FORWARD_PID $FORWARD_PID"
   kill "$FORWARD_PID" > /dev/null 2>&1 || true
   exit $EXIT_CODE
 else
@@ -75,6 +76,7 @@ else
 
   EXIT_CODE=$?
 
+  echo "FORWARD_PID $FORWARD_PID"
   kill "$FORWARD_PID" > /dev/null 2>&1 || true
   exit $EXIT_CODE
 fi

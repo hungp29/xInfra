@@ -29,7 +29,6 @@ for name in "${!SCRIPTS[@]}"; do
 #!/bin/bash
 export PROJECT_ROOT="$PROJECT_ROOT"
 source "$PROJECT_ROOT/config/env.sh"
-echo "$INFRA_NAMESPACE"
 bash "$target" "\$@"
 EOF
 

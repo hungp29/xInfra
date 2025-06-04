@@ -7,6 +7,13 @@ if [[ -z "$PROJECT_ROOT" ]]; then
 fi
 
 SCRIPT_DIR="$PROJECT_ROOT/deploy"
+CONFIG_FILE="$PROJECT_ROOT/config/evn.sh"
+
+if [[ ! -f "$CONFIG_FILE" ]]; then
+  echo "❌ Missing config file: $CONFIG_FILE"
+  exit 1
+fi
+source "$CONFIG_FILE"
 
 # Default configuration
 POSTGRES_DB_USER_PASSWORD=$(openssl rand -base64 16)

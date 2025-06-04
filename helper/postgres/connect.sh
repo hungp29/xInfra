@@ -51,9 +51,14 @@ microk8s kubectl port-forward -n "$INFRA_NAMESPACE" svc/$POSTGRES_SERVICE_NAME "
 FORWARD_PID=$!
 
 # Ensure cleanup when script exits
-# cleanup() {
-#   kill $FORWARD_PID > /dev/null 2>&1 || true
-# }
+cleanup() {
+  # Kill wrapper PID
+  kill "$FORWARD_PID" > /dev/null 2>&1 || true
+
+  # Kill child process (kubectl)
+  CHILD_PID=$(pgrep -P "$FORWARD_PID")
+  kill "$CHILD_PID" > /dev/null 2>&1 || true
+}
 # trap cleanup EXIT
 
 # sleep 2
@@ -67,8 +72,9 @@ if [[ -n "$QUERY" ]]; then
   PGPASSWORD="$PGPASSWORD" psql -h localhost -p "$PORT" -U "$DB_USER" -d "$DB_NAME" -c "$QUERY"
   EXIT_CODE=$?
 
-  echo "FORWARD_PID $FORWARD_PID"
-  kill "$FORWARD_PID" > /dev/null 2>&1 || true
+  # echo "FORWARD_PID $FORWARD_PID"
+  # kill "$FORWARD_PID" > /dev/null 2>&1 || true
+  cleanup
   exit $EXIT_CODE
 else
   echo "💬 Connecting to interactive psql shell..."
@@ -76,7 +82,8 @@ else
 
   EXIT_CODE=$?
 
-  echo "FORWARD_PID $FORWARD_PID"
-  kill "$FORWARD_PID" > /dev/null 2>&1 || true
+  # echo "FORWARD_PID $FORWARD_PID"
+  # kill "$FORWARD_PID" > /dev/null 2>&1 || true
+  cleanup
   exit $EXIT_CODE
 fi

@@ -15,7 +15,7 @@ if [[ "$1" == "--clean" ]]; then
   cp "$WHOAMI_YAML" "/tmp/whoami.yaml"
   tls_name=$(yq 'select(.kind == "Ingress") | .spec.tls[0].secretName' "/tmp/whoami.yaml")
 
-  microk8s kubectl delete secret $tls_name --namespace $NAMESPACE --ignore-not-found
+  microk8s kubectl delete secret $tls_name --namespace default --ignore-not-found
   
   exit 0
 fi

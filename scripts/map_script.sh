@@ -2,7 +2,7 @@
 
 # Root directory of the project
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-echo "📦 Mapping scripts from: $PROJECT_ROOT"
+echo "🌍 Project root: $PROJECT_ROOT"
 
 BIN_DIR="/usr/local/bin"
 
@@ -34,4 +34,4 @@ EOF
   sudo chmod +x "$BIN_DIR/$name"
 done
 
-echo "✅ Done. You can now run: deploy, undeploy, helper ..."
+echo "✅ Done. You can now run: deploy, helper ..."

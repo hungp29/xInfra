@@ -51,12 +51,12 @@ microk8s kubectl port-forward -n "$INFRA_NAMESPACE" svc/$POSTGRES_SERVICE_NAME "
 FORWARD_PID=$!
 
 # Ensure cleanup when script exits
-cleanup() {
-  kill $FORWARD_PID > /dev/null 2>&1 || true
-}
-trap cleanup EXIT
+# cleanup() {
+#   kill $FORWARD_PID > /dev/null 2>&1 || true
+# }
+# trap cleanup EXIT
 
-sleep 2
+# sleep 2
 
 # Get password from secret
 PGPASSWORD=$(microk8s kubectl get secret -n "$INFRA_NAMESPACE" "$POSTGRES_SECRET_NAME" -o jsonpath="{.data.password}" | base64 -d)

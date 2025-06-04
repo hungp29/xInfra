@@ -10,6 +10,7 @@ BIN_DIR="/usr/local/bin"
 declare -A SCRIPTS=(
   ["deploy"]="$PROJECT_ROOT/scripts/deploy.sh"
   ["helper"]="$PROJECT_ROOT/scripts/helper.sh"
+  ["service_test"]="$PROJECT_ROOT/scripts/service_test.sh"
 )
 echo "📦 Mapping CLI scripts to $BIN_DIR..."
 

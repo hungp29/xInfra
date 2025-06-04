@@ -74,7 +74,7 @@ if [[ -n "$QUERY" ]]; then
 
   # echo "FORWARD_PID $FORWARD_PID"
   # kill "$FORWARD_PID" > /dev/null 2>&1 || true
-  cleanup
+  # cleanup
   exit $EXIT_CODE
 else
   echo "💬 Connecting to interactive psql shell..."
@@ -84,6 +84,6 @@ else
 
   # echo "FORWARD_PID $FORWARD_PID"
   # kill "$FORWARD_PID" > /dev/null 2>&1 || true
-  cleanup
+  # cleanup
   exit $EXIT_CODE
 fi

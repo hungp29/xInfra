@@ -6,10 +6,7 @@ if [[ -z "$PROJECT_ROOT" ]]; then
   exit 1
 fi
 
-# SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-SCRIPT_DIR="$PROJECT_ROOT/deploy"
-CONFIG_FILE="$PROJECT_ROOT/config.sh"
+CONFIG_FILE="$PROJECT_ROOT/config/env.sh"
 
 if [[ ! -f "$CONFIG_FILE" ]]; then
   echo "❌ Missing config file: $CONFIG_FILE"

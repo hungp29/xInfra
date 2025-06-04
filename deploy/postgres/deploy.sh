@@ -6,7 +6,7 @@ if [[ -z "$PROJECT_ROOT" ]]; then
   exit 1
 fi
 
-SCRIPT_DIR="$PROJECT_ROOT/deploy"
+SCRIPT_DIR="$PROJECT_ROOT/deploy/postgres"
 CONFIG_FILE="$PROJECT_ROOT/config/env.sh"
 
 if [[ ! -f "$CONFIG_FILE" ]]; then

@@ -60,15 +60,21 @@ FORWARD_PID=$!
 
 # Get password from secret
 PGPASSWORD=$(microk8s kubectl get secret -n "$INFRA_NAMESPACE" "$POSTGRES_SECRET_NAME" -o jsonpath="{.data.password}" | base64 -d)
-echo "Pass: $PGPASSWORD"
-echo "User: $DB_USER"
-echo "DB: $DB_NAME"
 
 # Connect or run query
 if [[ -n "$QUERY" ]]; then
   echo "▶️ Running query: $QUERY"
   PGPASSWORD="$PGPASSWORD" psql -h localhost -p "$PORT" -U "$DB_USER" -d "$DB_NAME" -c "$QUERY"
+  EXIT_CODE=$?
+
+  kill "$FORWARD_PID" > /dev/null 2>&1 || true
+  exit $EXIT_CODE
 else
   echo "💬 Connecting to interactive psql shell..."
   PGPASSWORD="$PGPASSWORD" psql -h localhost -p "$PORT" -U "$DB_USER" -d "$DB_NAME"
+
+  EXIT_CODE=$?
+
+  kill "$FORWARD_PID" > /dev/null 2>&1 || true
+  exit $EXIT_CODE
 fi

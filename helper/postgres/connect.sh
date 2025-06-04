@@ -60,7 +60,9 @@ sleep 2
 
 # Get password from secret
 PGPASSWORD=$(microk8s kubectl get secret -n "$INFRA_NAMESPACE" "$POSTGRES_SECRET_NAME" -o jsonpath="{.data.password}" | base64 -d)
-echo "$PGPASSWORD"
+echo "Pass: $PGPASSWORD"
+echo "User: $DB_USER"
+echo "DB: $DB_NAME"
 
 # Connect or run query
 if [[ -n "$QUERY" ]]; then

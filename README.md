@@ -6,17 +6,27 @@ xInfra is a simple toolkit for setting up a local [MicroK8s](https://microk8s.io
 
 - **Setup MicroK8s:**
   ```sh
-  ./setup.sh
+  sudo ./setup.sh
   ```
 
-- **Test the environment:**
+- **Deploy whoami service to test the environment:**
   ```sh
-  ./test.sh
+  service_test
   ```
 
-- **Clean up resources:**
+- **Clean up whoami resources:**
   ```sh
-  ./clean.sh
+  service_test --clean
+  ```
+
+- **Deploy/Undeploy common services:**
+  ```sh
+  deploy [--only=postgres] [--clean]
+  ```
+
+- **Using helper:**
+  ```sh
+  helper <component> <command>
   ```
 
 ## Requirements

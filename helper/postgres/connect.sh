@@ -54,36 +54,26 @@ FORWARD_PID=$!
 cleanup() {
   echo "🧹 Cleaning up port-forward (PID: $FORWARD_PID)..."
 
-  kill_process_tree() {
-    local parent_pid="$1"
-    local children
-    children=$(pgrep -P "$parent_pid")
+  kill_tree() {
+    local _pid=$1
+    local _children
+    _children=$(pgrep -P "$_pid")
+    echo "🔍 Killing process tree for PID: $_pid"
+    if [[ -z "$_children" ]]; then
+      echo "No children processes found for PID: $_pid"
+    else
+      echo "Children processes: $_children"
+    fi
 
-    for child in $children; do
-      kill_process_tree "$child"
+    for _child in $_children; do
+      kill_tree "$_child"
     done
 
-    if kill -0 "$parent_pid" 2>/dev/null; then
-      echo "⛔ Killing PID: $parent_pid"
-      kill "$parent_pid" 2>/dev/null || true
-
-      # Chờ nó thoát
-      for i in {1..10}; do
-        if ! kill -0 "$parent_pid" 2>/dev/null; then
-          break
-        fi
-        sleep 0.2
-      done
-
-      # Nếu vẫn còn sống thì kill -9
-      if kill -0 "$parent_pid" 2>/dev/null; then
-        echo "⚠️ Forcing kill PID $parent_pid"
-        kill -KILL "$parent_pid" 2>/dev/null || true
-      fi
-    fi
+    echo "Killing PID: $_pid"
+    kill -9 "$_pid" > /dev/null 2>&1 || true
   }
 
-  kill_process_tree "$FORWARD_PID"
+  kill_tree "$FORWARD_PID"
 }
 # trap cleanup EXIT
 

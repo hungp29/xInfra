@@ -52,7 +52,7 @@ FORWARD_PID=$!
 
 # Ensure cleanup when script exits
 cleanup() {
-  echo "🧹 Cleaning up port-forward (PID: $FORWARD_PID)..."
+  echo "🧹 Cleaning up port-forward..."
 
   kill_tree() {
     local _pid=$1

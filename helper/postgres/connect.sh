@@ -65,12 +65,13 @@ cleanup() {
       echo "Children processes: $_children"
     fi
 
+    echo "Killing PID: $_pid"
+    kill "$_pid" > /dev/null 2>&1 || true
+    
     for _child in $_children; do
       kill_tree "$_child"
     done
 
-    echo "Killing PID: $_pid"
-    kill -9 "$_pid" > /dev/null 2>&1 || true
   }
 
   kill_tree "$FORWARD_PID"

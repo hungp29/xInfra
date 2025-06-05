@@ -41,15 +41,20 @@ chown -f -R $CURRENT_USER ~/.kube
 echo "⏳ Waiting for MicroK8s to be ready..."
 microk8s status --wait-ready > /dev/null
 
-echo "⚙️ Enabling addons: dns, ingress, cert-manager, hostpath-storage, helm3 ..."
-REQUIRED_ADDONS=("dns" "ingress" "cert-manager" "hostpath-storage" "helm3")
+echo "⚙️ Enabling addons: dns, ingress, cert-manager, hostpath-storage, helm3, metallb ..."
+REQUIRED_ADDONS=("dns" "ingress" "cert-manager" "hostpath-storage" "helm3" "metallb")
+METALLB_RANGE="192.168.0.202-192.168.0.220"
 
 for addon in "${REQUIRED_ADDONS[@]}"; do
   if microk8s status --format short | grep -qE ".*/$addon: enabled"; then
     echo "[OK] Addon '$addon' is already enabled."
   else
     echo "[..] Enabling addon '$addon'..."
-    microk8s enable "$addon"
+    if [ "$addon" = "metallb" ]; then
+      microk8s enable "$addon:$METALLB_RANGE"
+    else
+      microk8s enable "$addon"
+    fi
   fi
 done
 

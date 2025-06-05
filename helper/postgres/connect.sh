@@ -57,19 +57,27 @@ cleanup() {
   kill_tree() {
     local _pid=$1
     local _children
+
     _children=$(pgrep -P "$_pid")
-    echo "🔍 Killing process tree for PID: $_pid"
-    if [[ -z "$_children" ]]; then
-      echo "No children processes found for PID: $_pid"
-    else
-      echo "Children processes: $_children"
-    fi
 
     for _child in $_children; do
       kill_tree "$_child"
     done
 
-    kill "$_pid" > /dev/null 2>&1
+    echo "⛔ Killing PID: $_pid"
+    kill -TERM "$_pid" > /dev/null 2>&1 || true
+
+    for i in {1..10}; do
+      if ! kill -0 "$_pid" 2>/dev/null; then
+        break
+      fi
+      sleep 0.2
+    done
+
+    if kill -0 "$_pid" 2>/dev/null; then
+      echo "⚠️ PID $_pid still alive, sending SIGKILL..."
+      kill -KILL "$_pid" > /dev/null 2>&1 || true
+    fi
   }
 
   kill_tree "$FORWARD_PID"

@@ -69,7 +69,7 @@ cleanup() {
       kill_tree "$_child"
     done
 
-    kill "$_pid" > /dev/null 2>&1 || true
+    kill "$_pid" > /dev/null 2>&1
   }
 
   kill_tree "$FORWARD_PID"

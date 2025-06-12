@@ -44,5 +44,5 @@ if ! ping -c 3 "$TARGET" > /dev/null 2>&1; then
         sudo reboot
     fi
 else
-    echo "$(date): Network OK." >> "$LOG_FILE"
+    echo "$(date): Network OK" >> "$LOG_FILE"
 fi

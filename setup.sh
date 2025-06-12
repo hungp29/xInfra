@@ -78,3 +78,31 @@ create_cluster_issuer "letsencrypt-prod" "$SCRIPT_DIR/cert-manager/cluster-issue
 service_test
 
 echo "✅ MicroK8s setup complete!"
+
+SCRIPT_NAME="check_network.sh"
+SOURCE_PATH="$SCRIPT_DIR/scripts/$SCRIPT_NAME"
+TARGET_PATH="/usr/local/bin/$SCRIPT_NAME"
+
+if [[ ! -f "$SOURCE_PATH" ]]; then
+  echo "❌ Source script $SOURCE_PATH does not exist."
+  exit 1
+fi
+
+echo "📂 Copying from $SOURCE_PATH to $TARGET_PATH..."
+sudo cp "$SOURCE_PATH" "$TARGET_PATH"
+
+echo "🔒 Permissions for $TARGET_PATH..."
+sudo chmod +x "$TARGET_PATH"
+
+CRON_JOB="*/5 * * * * $TARGET_PATH"
+
+EXISTS=$(sudo crontab -l 2>/dev/null | grep -F "$CRON_JOB" || true)
+
+if [[ -z "$EXISTS" ]]; then
+  echo "⏱️  Adding cron job to check network every 5 minutes..."
+  (sudo crontab -l 2>/dev/null; echo "$CRON_JOB") | sudo crontab -
+else
+  echo "✅ Cron job already exists."
+fi
+
+echo "✅ Setup complete! Please reboot your system to apply changes."
